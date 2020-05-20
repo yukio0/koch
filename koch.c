@@ -2,6 +2,7 @@
 #include <math.h>
 
 #define M_PI 3.14159265358979323846
+double sixtyDegree = M_PI * 60.0 / 180.0;
 
 struct Point
 {
@@ -12,6 +13,7 @@ int plotKoch(int step)
 {
     FILE *gp;
     gp = popen("gnuplot -persist", "w");
+
     fprintf(gp, "set size ratio -1\n");
     fprintf(gp, "set noborder\n");
     fprintf(gp, "set nozeroaxis\n");
@@ -27,47 +29,47 @@ int plotKoch(int step)
     return 0;
 }
 
-int koch(int n, FILE **fp, struct Point a, struct Point b)
+int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
 {
     if (n == 0)
         return 0;
 
     struct Point s, t, u;
-    double th = M_PI * 60.0 / 180.0;
+    
 
-    s.x = (2.0 * a.x + 1.0 * b.x) / 3.0;
-    s.y = (2.0 * a.y + 1.0 * b.y) / 3.0;
-    t.x = (1.0 * a.x + 2.0 * b.x) / 3.0;
-    t.y = (1.0 * a.y + 2.0 * b.y) / 3.0;
-    u.x = (t.x - s.x) * cos(th) - (t.y - s.y) * sin(th) + s.x;
-    u.y = (t.x - s.x) * sin(th) + (t.y - s.y) * cos(th) + s.y;
+    s.x = (2.0 * firstPoint.x + 1.0 * lastPoint.x) / 3.0;
+    s.y = (2.0 * firstPoint.y + 1.0 * lastPoint.y) / 3.0;
+    t.x = (1.0 * firstPoint.x + 2.0 * lastPoint.x) / 3.0;
+    t.y = (1.0 * firstPoint.y + 2.0 * lastPoint.y) / 3.0;
+    u.x = (t.x - s.x) * cos(sixtyDegree) - (t.y - s.y) * sin(sixtyDegree) + s.x;
+    u.y = (t.x - s.x) * sin(sixtyDegree) + (t.y - s.y) * cos(sixtyDegree) + s.y;
 
-    koch(n - 1, fp, a, s);
+    koch(n - 1, fp, firstPoint, s);
     fprintf(*fp, "%.8f %.8f\n", s.x, s.y);
     koch(n - 1, fp, s, u);
     fprintf(*fp, "%.8f %.8f\n", u.x, u.y);
     koch(n - 1, fp, u, t);
     fprintf(*fp, "%.8f %.8f\n", t.x, t.y);
-    koch(n - 1, fp, t, b);
+    koch(n - 1, fp, t, lastPoint);
 }
 
 int main(void)
 {
     int step;
-    struct Point a, b;
+    struct Point firstPoint, lastPoint;
     printf("step=");
     scanf("%d", &step);
 
-    a.x = 0;
-    a.y = 0;
-    b.x = 10;
-    b.y = 0;
+    firstPoint.x = 0;
+    firstPoint.y = 0;
+    lastPoint.x = 10;
+    lastPoint.y = 0;
 
     FILE *fp;
     fp = fopen("./.kochPlot", "w");
-    fprintf(fp, "%.8f %.8f\n", a.x, a.y);
-    koch(step, &fp, a, b);
-    fprintf(fp, "%.8f %.8f\n", b.x, b.y);
+    fprintf(fp, "%.8f %.8f\n", firstPoint.x, firstPoint.y);
+    koch(step, &fp, firstPoint, lastPoint);
+    fprintf(fp, "%.8f %.8f\n", lastPoint.x, lastPoint.y);
 
     fclose(fp);
 
