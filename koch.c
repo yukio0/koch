@@ -2,7 +2,7 @@
 #include <math.h>
 
 #define M_PI 3.14159265358979323846
-double sixtyDegree = M_PI * 60.0 / 180.0;
+double sixtyDegrees = M_PI * 60.0 / 180.0;
 
 struct Point
 {
@@ -41,8 +41,8 @@ int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
     s.y = (2.0 * firstPoint.y + 1.0 * lastPoint.y) / 3.0;
     t.x = (1.0 * firstPoint.x + 2.0 * lastPoint.x) / 3.0;
     t.y = (1.0 * firstPoint.y + 2.0 * lastPoint.y) / 3.0;
-    u.x = (t.x - s.x) * cos(sixtyDegree) - (t.y - s.y) * sin(sixtyDegree) + s.x;
-    u.y = (t.x - s.x) * sin(sixtyDegree) + (t.y - s.y) * cos(sixtyDegree) + s.y;
+    u.x = (t.x - s.x) * cos(sixtyDegrees) - (t.y - s.y) * sin(sixtyDegrees) + s.x;
+    u.y = (t.x - s.x) * sin(sixtyDegrees) + (t.y - s.y) * cos(sixtyDegrees) + s.y;
 
     koch(n - 1, fp, firstPoint, s);
     fprintf(*fp, "%.8f %.8f\n", s.x, s.y);
