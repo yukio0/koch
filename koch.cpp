@@ -13,7 +13,7 @@ int plotKoch(void)
     FILE *gp;
     gp = popen("gnuplot -persist", "w");
     fprintf(gp, "set size ratio -1\n");
-    fprintf(gp, "plot \'kochPlot\' w l\n");
+    fprintf(gp, "plot \'.kochPlot\' w l\n");
 
     pclose(gp); 
     return 0;
@@ -56,7 +56,7 @@ int main(void)
     b.y = 0;
 
     FILE *fp;
-    fp = fopen("./kochPlot", "w");
+    fp = fopen("./.kochPlot", "w");
     fprintf(fp, "%.8f %.8f\n", a.x, a.y);
     koch(n,&fp, a, b);
     fprintf(fp, "%.8f %.8f\n", b.x, b.y);
