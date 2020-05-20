@@ -8,14 +8,22 @@ struct Point
     double x, y;
 };
 
-int plotKoch(void)
+int plotKoch(int step)
 {
     FILE *gp;
     gp = popen("gnuplot -persist", "w");
     fprintf(gp, "set size ratio -1\n");
-    fprintf(gp, "plot \'.kochPlot\' w l\n");
+    fprintf(gp, "set noborder\n");
+    fprintf(gp, "set nozeroaxis\n");
+    fprintf(gp, "set nogrid\n");
+    fprintf(gp, "set noxzeroaxis\n");
+    fprintf(gp, "set noyzeroaxis\n");
+    fprintf(gp, "set noxtics\n");
+    fprintf(gp, "set noytics\n");
+    fprintf(gp, "set key\n");
+    fprintf(gp, "plot \'.kochPlot\' w l title \'step=%d\'\n", step);
 
-    pclose(gp); 
+    pclose(gp);
     return 0;
 }
 
@@ -34,21 +42,21 @@ int koch(int n, FILE **fp, struct Point a, struct Point b)
     u.x = (t.x - s.x) * cos(th) - (t.y - s.y) * sin(th) + s.x;
     u.y = (t.x - s.x) * sin(th) + (t.y - s.y) * cos(th) + s.y;
 
-    koch(n - 1,fp, a, s);
-    fprintf(*fp,"%.8f %.8f\n", s.x, s.y);
-    koch(n - 1,fp, s, u);
-    fprintf(*fp,"%.8f %.8f\n", u.x, u.y);
-    koch(n - 1,fp, u, t);
-    fprintf(*fp,"%.8f %.8f\n", t.x, t.y);
-    koch(n - 1,fp, t, b);
+    koch(n - 1, fp, a, s);
+    fprintf(*fp, "%.8f %.8f\n", s.x, s.y);
+    koch(n - 1, fp, s, u);
+    fprintf(*fp, "%.8f %.8f\n", u.x, u.y);
+    koch(n - 1, fp, u, t);
+    fprintf(*fp, "%.8f %.8f\n", t.x, t.y);
+    koch(n - 1, fp, t, b);
 }
 
 int main(void)
 {
-    int n;
+    int step;
     struct Point a, b;
     printf("step=");
-    scanf("%d", &n);
+    scanf("%d", &step);
 
     a.x = 0;
     a.y = 0;
@@ -58,11 +66,11 @@ int main(void)
     FILE *fp;
     fp = fopen("./.kochPlot", "w");
     fprintf(fp, "%.8f %.8f\n", a.x, a.y);
-    koch(n,&fp, a, b);
+    koch(step, &fp, a, b);
     fprintf(fp, "%.8f %.8f\n", b.x, b.y);
 
     fclose(fp);
 
-    plotKoch();
+    plotKoch(step);
     return 0;
 }
