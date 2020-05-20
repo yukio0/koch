@@ -35,7 +35,6 @@ int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
         return 0;
 
     struct Point s, t, u;
-    
 
     s.x = (2.0 * firstPoint.x + 1.0 * lastPoint.x) / 3.0;
     s.y = (2.0 * firstPoint.y + 1.0 * lastPoint.y) / 3.0;
@@ -51,6 +50,8 @@ int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
     koch(n - 1, fp, u, t);
     fprintf(*fp, "%.8f %.8f\n", t.x, t.y);
     koch(n - 1, fp, t, lastPoint);
+
+    return 0;
 }
 
 int main(void)
