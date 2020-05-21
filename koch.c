@@ -34,22 +34,22 @@ int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
     if (n == 0)
         return 0;
 
-    struct Point s, t, u;
+    struct Point left, right, center;
 
-    s.x = (2.0 * firstPoint.x + 1.0 * lastPoint.x) / 3.0;
-    s.y = (2.0 * firstPoint.y + 1.0 * lastPoint.y) / 3.0;
-    t.x = (1.0 * firstPoint.x + 2.0 * lastPoint.x) / 3.0;
-    t.y = (1.0 * firstPoint.y + 2.0 * lastPoint.y) / 3.0;
-    u.x = (t.x - s.x) * cos(sixtyDegrees) - (t.y - s.y) * sin(sixtyDegrees) + s.x;
-    u.y = (t.x - s.x) * sin(sixtyDegrees) + (t.y - s.y) * cos(sixtyDegrees) + s.y;
+    left.x = (2.0 * firstPoint.x + 1.0 * lastPoint.x) / 3.0;
+    left.y = (2.0 * firstPoint.y + 1.0 * lastPoint.y) / 3.0;
+    right.x = (1.0 * firstPoint.x + 2.0 * lastPoint.x) / 3.0;
+    right.y = (1.0 * firstPoint.y + 2.0 * lastPoint.y) / 3.0;
+    center.x = (right.x - left.x) * cos(sixtyDegrees) - (right.y - left.y) * sin(sixtyDegrees) + left.x;
+    center.y = (right.x - left.x) * sin(sixtyDegrees) + (right.y - left.y) * cos(sixtyDegrees) + left.y;
 
-    koch(n - 1, fp, firstPoint, s);
-    fprintf(*fp, "%.8f %.8f\n", s.x, s.y);
-    koch(n - 1, fp, s, u);
-    fprintf(*fp, "%.8f %.8f\n", u.x, u.y);
-    koch(n - 1, fp, u, t);
-    fprintf(*fp, "%.8f %.8f\n", t.x, t.y);
-    koch(n - 1, fp, t, lastPoint);
+    koch(n - 1, fp, firstPoint, left);
+    fprintf(*fp, "%.8f %.8f\n", left.x, left.y);
+    koch(n - 1, fp, left, center);
+    fprintf(*fp, "%.8f %.8f\n", center.x, center.y);
+    koch(n - 1, fp, center, right);
+    fprintf(*fp, "%.8f %.8f\n", right.x, right.y);
+    koch(n - 1, fp, right, lastPoint);
 
     return 0;
 }
@@ -57,10 +57,10 @@ int koch(int n, FILE **fp, struct Point firstPoint, struct Point lastPoint)
 int main(void)
 {
     int step;
-    struct Point firstPoint, lastPoint;
     printf("step=");
     scanf("%d", &step);
 
+    struct Point firstPoint, lastPoint;
     firstPoint.x = 0;
     firstPoint.y = 0;
     lastPoint.x = 10;
